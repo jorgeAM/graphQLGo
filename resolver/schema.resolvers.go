@@ -5,6 +5,7 @@ package resolver
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/jorgeAM/basicGraphql/generated"
@@ -12,11 +13,45 @@ import (
 )
 
 func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput) (*models.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	_, err := r.UserResolver.FindByEmail(input.Email)
+
+	if err == nil {
+		return nil, errors.New("This email already taken")
+	}
+
+	if input.Password != input.ConfirmPassword {
+		return nil, errors.New("Passwords does not matches")
+	}
+
+	u := &models.User{
+		Name:     *input.Name,
+		Email:    input.Email,
+		Password: input.Password,
+	}
+
+	err = u.HashPassword()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return r.UserResolver.Create(u)
 }
 
 func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (*models.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	u, err := r.UserResolver.FindByEmail(input.Email)
+
+	if err != nil {
+		return nil, errors.New("User does not exist")
+	}
+
+	err = u.CheckPassword(input.Password)
+
+	if err != nil {
+		return nil, errors.New("Password is incorrect")
+	}
+
+	return u, nil
 }
 
 func (r *queryResolver) Me(ctx context.Context, input models.MeInput) (*models.User, error) {

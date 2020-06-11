@@ -8,4 +8,5 @@ require (
 	github.com/go-pg/pg/v10 v10.0.0-beta.2
 	github.com/joho/godotenv v1.3.0
 	github.com/vektah/gqlparser/v2 v2.0.1
+	golang.org/x/crypto v0.0.0-20200604202706-70a84ac30bf9
 )

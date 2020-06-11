@@ -8,7 +8,9 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/jorgeAM/basicGraphql/db"
 	"github.com/jorgeAM/basicGraphql/generated"
+	userrepository "github.com/jorgeAM/basicGraphql/repositories/user"
 	"github.com/jorgeAM/basicGraphql/resolver"
 )
 
@@ -21,8 +23,23 @@ func main() {
 		port = defaultPort
 	}
 
+	dbEngine := os.Getenv("DB_ENGINE")
+	dbURL := os.Getenv("DB_URL")
+
+	dbHandler, err := db.NewPersistenceLayer(db.TYPE(dbEngine), dbURL)
+
+	if err != nil {
+		log.Fatalf("Something get wrong to connect to %s: %v", dbEngine, err)
+	}
+
+	userRep, err := userrepository.NewUserRepository(db.TYPE(dbEngine), dbHandler)
+
+	if err != nil {
+		log.Fatalf("Something get wrong to initialize user repository to %s: %v", dbEngine, err)
+	}
+
 	cfg := generated.Config{
-		Resolvers: &resolver.Resolver{},
+		Resolvers: &resolver.Resolver{UserResolver: userRep},
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(cfg))
