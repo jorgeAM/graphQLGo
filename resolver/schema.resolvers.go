@@ -20,12 +20,7 @@ func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (
 }
 
 func (r *queryResolver) Me(ctx context.Context, input models.MeInput) (*models.User, error) {
-	return &models.User{
-		ID:       input.ID,
-		Email:    "jorge.alfmur@gmail.com",
-		Name:     "Jorguito",
-		Password: "123456",
-	}, nil
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Mutation returns generated.MutationResolver implementation.

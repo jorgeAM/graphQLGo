@@ -1,11 +1,13 @@
 package models
 
+import "time"
+
 // User model
 type User struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Email     string `json:"email"`
-	Password  string `json:"password"`
-	CreatedAt string `json:"createdAt"`
-	UpdatedAt string `json:"updatedAt"`
+	ID        int       `json:"id"`
+	Name      string    `json:"name" pg:"type:varchar(100)"`
+	Email     string    `json:"email" pg:",unique,type:varchar(100)"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"createdAt" pg:"default:now()"`
+	UpdatedAt time.Time `json:"updatedAt" pg:"default:now()"`
 }
