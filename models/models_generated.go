@@ -2,13 +2,14 @@
 
 package models
 
+type Auth struct {
+	Token string `json:"token"`
+	User  *User  `json:"user"`
+}
+
 type LoginInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
-}
-
-type MeInput struct {
-	ID string `json:"id"`
 }
 
 type SignUpInput struct {

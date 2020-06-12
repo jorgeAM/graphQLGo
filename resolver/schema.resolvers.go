@@ -12,7 +12,7 @@ import (
 	"github.com/jorgeAM/basicGraphql/models"
 )
 
-func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput) (*models.User, error) {
+func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput) (*models.Auth, error) {
 	_, err := r.UserResolver.FindByEmail(input.Email)
 
 	if err == nil {
@@ -35,10 +35,16 @@ func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput)
 		return nil, err
 	}
 
-	return r.UserResolver.Create(u)
+	_, err = r.UserResolver.Create(u)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return u.GenerateToken()
 }
 
-func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (*models.User, error) {
+func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (*models.Auth, error) {
 	u, err := r.UserResolver.FindByEmail(input.Email)
 
 	if err != nil {
@@ -51,10 +57,10 @@ func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (
 		return nil, errors.New("Password is incorrect")
 	}
 
-	return u, nil
+	return u.GenerateToken()
 }
 
-func (r *queryResolver) Me(ctx context.Context, input models.MeInput) (*models.User, error) {
+func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
 	panic(fmt.Errorf("not implemented"))
 }
 
