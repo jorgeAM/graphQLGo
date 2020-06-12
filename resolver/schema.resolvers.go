@@ -6,10 +6,10 @@ package resolver
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/jorgeAM/basicGraphql/generated"
 	"github.com/jorgeAM/basicGraphql/models"
+	"github.com/jorgeAM/basicGraphql/utils"
 )
 
 func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput) (*models.Auth, error) {
@@ -61,7 +61,7 @@ func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return utils.GetUserFromContext(ctx, r.UserResolver)
 }
 
 // Mutation returns generated.MutationResolver implementation.

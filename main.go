@@ -10,6 +10,7 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/jorgeAM/basicGraphql/db"
 	"github.com/jorgeAM/basicGraphql/generated"
+	"github.com/jorgeAM/basicGraphql/middleware"
 	userrepository "github.com/jorgeAM/basicGraphql/repositories/user"
 	"github.com/jorgeAM/basicGraphql/resolver"
 )
@@ -43,8 +44,9 @@ func main() {
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(cfg))
+
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	http.Handle("/query", middleware.Authentication(srv))
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
