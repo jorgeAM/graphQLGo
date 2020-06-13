@@ -5,7 +5,7 @@ type User {
   name: String!
   email: String!
   createdAt: Time!
-  todos: [Todo!]
+  todos: [Todo]!
 }
 
 type Todo {

@@ -6,6 +6,7 @@ package resolver
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/jorgeAM/basicGraphql/generated"
 	"github.com/jorgeAM/basicGraphql/models"
@@ -64,11 +65,27 @@ func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
 	return utils.GetUserFromContext(ctx, r.UserResolver)
 }
 
+func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
+func (r *userResolver) Todos(ctx context.Context, obj *models.User) ([]*models.Todo, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Todo returns generated.TodoResolver implementation.
+func (r *Resolver) Todo() generated.TodoResolver { return &todoResolver{r} }
+
+// User returns generated.UserResolver implementation.
+func (r *Resolver) User() generated.UserResolver { return &userResolver{r} }
+
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type todoResolver struct{ *Resolver }
+type userResolver struct{ *Resolver }

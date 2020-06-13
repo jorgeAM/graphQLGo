@@ -30,6 +30,11 @@ autobind:
 models:
   User:
     model: github.com/jorgeAM/basicGraphql/models.User
+    fields:
+      todos:
+        resolver: true
+  Todo:
+    model: github.com/jorgeAM/basicGraphql/models.Todo
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID
