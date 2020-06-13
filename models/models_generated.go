@@ -7,6 +7,11 @@ type Auth struct {
 	User  *User  `json:"user"`
 }
 
+type CreateTodoInput struct {
+	Title       string  `json:"title"`
+	Description *string `json:"description"`
+}
+
 type LoginInput struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`

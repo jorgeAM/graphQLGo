@@ -11,7 +11,7 @@ type User {
 type Todo {
   id: ID!
   title: String!
-  Description: String
+  description: String
   createdAt: Time!
   user: User!
 }
@@ -33,6 +33,11 @@ input LoginInput {
   password: String!
 }
 
+input CreateTodoInput {
+  title: String!
+  description: String
+}
+
 type Query {
   me: User!
 }
@@ -40,4 +45,5 @@ type Query {
 type Mutation {
   signUp(input: SignUpInput!): Auth!
   login(input: LoginInput!): Auth!
+  createTodo(input: CreateTodoInput!): Todo
 }

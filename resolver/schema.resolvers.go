@@ -61,6 +61,10 @@ func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (
 	return u.GenerateToken()
 }
 
+func (r *mutationResolver) CreateTodo(ctx context.Context, input models.CreateTodoInput) (*models.Todo, error) {
+	panic(fmt.Errorf("not implemented"))
+}
+
 func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
 	return utils.GetUserFromContext(ctx, r.UserResolver)
 }
