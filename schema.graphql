@@ -5,6 +5,15 @@ type User {
   name: String!
   email: String!
   createdAt: Time!
+  todos: [Todo!]
+}
+
+type Todo {
+  id: ID!
+  title: String!
+  Description: String
+  createdAt: Time!
+  user: User!
 }
 
 type Auth {

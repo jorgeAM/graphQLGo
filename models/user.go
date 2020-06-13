@@ -17,6 +17,7 @@ type User struct {
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"createdAt" pg:"default:now()"`
 	UpdatedAt time.Time `json:"updatedAt" pg:"default:now()"`
+	Todos     *[]Todo   `json:"todos"`
 }
 
 // HashPassword encrypt password
