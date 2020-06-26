@@ -833,9 +833,9 @@ func (ec *executionContext) _Todo_description(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalOString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Todo_createdAt(ctx context.Context, field graphql.CollectedField, obj *models.Todo) (ret graphql.Marshaler) {

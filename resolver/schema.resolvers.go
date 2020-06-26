@@ -7,6 +7,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/jorgeAM/basicGraphql/generated"
 	"github.com/jorgeAM/basicGraphql/models"
@@ -62,7 +63,25 @@ func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (
 }
 
 func (r *mutationResolver) CreateTodo(ctx context.Context, input models.CreateTodoInput) (*models.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+	id, err := utils.GetUserIDFromContext(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	casted, err := strconv.Atoi(*id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	todo := &models.Todo{
+		Title:       input.Title,
+		Description: input.Description,
+		UserID:      casted,
+	}
+
+	return r.TodoResolver.Create(todo)
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {

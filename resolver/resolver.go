@@ -1,6 +1,7 @@
 package resolver
 
 import (
+	todorepository "github.com/jorgeAM/basicGraphql/repositories/todo"
 	userresolver "github.com/jorgeAM/basicGraphql/repositories/user"
 )
 
@@ -11,4 +12,5 @@ import (
 // Resolver handles dependecies
 type Resolver struct {
 	UserResolver userresolver.Handler
+	TodoResolver todorepository.Handler
 }

@@ -11,6 +11,7 @@ import (
 	"github.com/jorgeAM/basicGraphql/db"
 	"github.com/jorgeAM/basicGraphql/generated"
 	"github.com/jorgeAM/basicGraphql/middleware"
+	todorepository "github.com/jorgeAM/basicGraphql/repositories/todo"
 	userrepository "github.com/jorgeAM/basicGraphql/repositories/user"
 	"github.com/jorgeAM/basicGraphql/resolver"
 )
@@ -39,8 +40,17 @@ func main() {
 		log.Fatalf("Something get wrong to initialize user repository to %s: %v", dbEngine, err)
 	}
 
+	todoRep, err := todorepository.NewTodoRepository(db.TYPE(dbEngine), dbHandler)
+
+	if err != nil {
+		log.Fatalf("Something get wrong to initialize todo repository to %s: %v", dbEngine, err)
+	}
+
 	cfg := generated.Config{
-		Resolvers: &resolver.Resolver{UserResolver: userRep},
+		Resolvers: &resolver.Resolver{
+			UserResolver: userRep,
+			TodoResolver: todoRep,
+		},
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(cfg))
