@@ -12,11 +12,11 @@ import (
 // User model
 type User struct {
 	ID        int       `json:"id"`
-	Name      string    `json:"name" pg:"type:varchar(100)"`
-	Email     string    `json:"email" pg:",unique,type:varchar(100)"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email"`
 	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"createdAt" pg:"default:now()"`
-	UpdatedAt time.Time `json:"updatedAt" pg:"default:now()"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 	Todos     *[]Todo   `json:"todos"`
 }
 

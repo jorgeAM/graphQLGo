@@ -3,10 +3,10 @@
 CREATE TABLE users(
   id SERIAL PRIMARY KEY,
   name VARCHAR(50),
-  email VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
   password VARCHAR(100),
-  created_at TIMESTAMPTZ,
-  updated_at TIMESTAMPTZ
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  Updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 

@@ -5,8 +5,8 @@ CREATE TABLE todos(
   title VARCHAR(100),
   description TEXT,
   user_id  INTEGER REFERENCES users (id),
-  created_at TIMESTAMPTZ,
-  updated_at TIMESTAMPTZ
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  Updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- +goose Down
