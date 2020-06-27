@@ -2,5 +2,6 @@ package utils
 
 // Constants
 const (
-	UserID = "userID"
+	UserID  = "userID"
+	Loaders = "loaders"
 )

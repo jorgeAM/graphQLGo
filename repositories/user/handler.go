@@ -12,6 +12,7 @@ type Handler interface {
 	Create(user *models.User) (*models.User, error)
 	FindByEmail(email string) (*models.User, error)
 	FindByID(id string) (*models.User, error)
+	FindByIds(ids []int) ([]*models.User, error)
 }
 
 // NewUserRepository initialize userRepository

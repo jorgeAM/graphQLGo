@@ -53,3 +53,16 @@ func (r *PSQLRepository) FindByID(id string) (*models.User, error) {
 
 	return user, nil
 }
+
+// FindByIds method finds users by ds
+func (r *PSQLRepository) FindByIds(ids []int) ([]*models.User, error) {
+	var users []*models.User
+
+	err := r.DB.Model(&users).WhereIn("id in (?)", ids).Select()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
