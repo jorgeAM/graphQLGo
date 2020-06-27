@@ -9,13 +9,14 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/jorgeAM/basicGraphql/dataloader"
 	"github.com/jorgeAM/basicGraphql/generated"
 	"github.com/jorgeAM/basicGraphql/models"
 	"github.com/jorgeAM/basicGraphql/utils"
 )
 
 func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput) (*models.Auth, error) {
-	_, err := r.UserResolver.FindByEmail(input.Email)
+	_, err := r.UserRepository.FindByEmail(input.Email)
 
 	if err == nil {
 		return nil, errors.New("This email already taken")
@@ -37,7 +38,7 @@ func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput)
 		return nil, err
 	}
 
-	_, err = r.UserResolver.Create(u)
+	_, err = r.UserRepository.Create(u)
 
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func (r *mutationResolver) SignUp(ctx context.Context, input models.SignUpInput)
 }
 
 func (r *mutationResolver) Login(ctx context.Context, input models.LoginInput) (*models.Auth, error) {
-	u, err := r.UserResolver.FindByEmail(input.Email)
+	u, err := r.UserRepository.FindByEmail(input.Email)
 
 	if err != nil {
 		return nil, errors.New("User does not exist")
@@ -81,15 +82,15 @@ func (r *mutationResolver) CreateTodo(ctx context.Context, input models.CreateTo
 		UserID:      casted,
 	}
 
-	return r.TodoResolver.Create(todo)
+	return r.TodoRepository.Create(todo)
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*models.User, error) {
-	return utils.GetUserFromContext(ctx, r.UserResolver)
+	return utils.GetUserFromContext(ctx, r.UserRepository)
 }
 
 func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dataloader.GetLoader(ctx).UserLoader.Load(obj.UserID)
 }
 
 func (r *userResolver) Todos(ctx context.Context, obj *models.User) ([]*models.Todo, error) {

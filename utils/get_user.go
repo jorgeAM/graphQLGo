@@ -5,7 +5,7 @@ import (
 	"errors"
 
 	"github.com/jorgeAM/basicGraphql/models"
-	userresolver "github.com/jorgeAM/basicGraphql/repositories/user"
+	userresolver "github.com/jorgeAM/basicGraphql/repository/user"
 )
 
 // GetUserFromContext return an instance of models.User struct

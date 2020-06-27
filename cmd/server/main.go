@@ -11,8 +11,7 @@ import (
 	"github.com/jorgeAM/basicGraphql/db"
 	"github.com/jorgeAM/basicGraphql/generated"
 	"github.com/jorgeAM/basicGraphql/middleware"
-	todorepository "github.com/jorgeAM/basicGraphql/repositories/todo"
-	userrepository "github.com/jorgeAM/basicGraphql/repositories/user"
+	"github.com/jorgeAM/basicGraphql/repository"
 	"github.com/jorgeAM/basicGraphql/resolver"
 )
 
@@ -34,29 +33,22 @@ func main() {
 		log.Fatalf("Something get wrong to connect to %s: %v", dbEngine, err)
 	}
 
-	userRep, err := userrepository.NewUserRepository(db.TYPE(dbEngine), dbHandler)
+	repoLayer, err := repository.NewRepositoryLayer(db.TYPE(dbEngine), dbHandler)
 
 	if err != nil {
-		log.Fatalf("Something get wrong to initialize user repository to %s: %v", dbEngine, err)
+		log.Fatalf("Something get wrong to initialize repository layer: %v", err)
 	}
 
-	todoRep, err := todorepository.NewTodoRepository(db.TYPE(dbEngine), dbHandler)
-
-	if err != nil {
-		log.Fatalf("Something get wrong to initialize todo repository to %s: %v", dbEngine, err)
-	}
+	resolver := &resolver.Resolver{repoLayer}
 
 	cfg := generated.Config{
-		Resolvers: &resolver.Resolver{
-			UserResolver: userRep,
-			TodoResolver: todoRep,
-		},
+		Resolvers: resolver,
 	}
 
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(cfg))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", middleware.Authentication(srv))
+	http.Handle("/query", middleware.Dataloader(repoLayer, middleware.Authentication((srv))))
 	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
 	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
