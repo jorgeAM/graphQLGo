@@ -16,7 +16,8 @@ const (
 
 // Loader handles all dataloaders
 type Loader struct {
-	UserLoader *UserLoader
+	UserLoader      *UserLoader
+	TodoSliceLoader *TodoSliceLoader
 }
 
 func newUserLoaderConfig(repository *repository.Layer) UserLoaderConfig {
@@ -47,12 +48,42 @@ func newUserLoaderConfig(repository *repository.Layer) UserLoaderConfig {
 	}
 }
 
+func newTodoSliceLoaderConfig(repository *repository.Layer) TodoSliceLoaderConfig {
+	return TodoSliceLoaderConfig{
+		MaxBatch: maxBatch,
+		Wait:     wait,
+		Fetch: func(ids []int) ([][]*models.Todo, []error) {
+			todos, err := repository.TodoRepository.FindByUserIds(ids)
+
+			if err != nil {
+				return nil, []error{err}
+			}
+
+			todosByID := make(map[int][]*models.Todo)
+
+			for _, todo := range todos {
+				todosByID[todo.UserID] = append(todosByID[todo.UserID], todo)
+			}
+
+			var result [][]*models.Todo
+
+			for _, id := range ids {
+				result = append(result, todosByID[id])
+			}
+
+			return result, nil
+		},
+	}
+}
+
 // NewLoader return a new instance of Loader struct
 func NewLoader(repository *repository.Layer) *Loader {
 	userLoaderConfig := newUserLoaderConfig(repository)
+	todoSliceLoaderConfig := newTodoSliceLoaderConfig(repository)
 
 	return &Loader{
-		UserLoader: NewUserLoader(userLoaderConfig),
+		UserLoader:      NewUserLoader(userLoaderConfig),
+		TodoSliceLoader: NewTodoSliceLoader(todoSliceLoaderConfig),
 	}
 }
 

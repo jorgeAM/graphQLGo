@@ -10,6 +10,7 @@ import (
 // Handler interface has all method to userRepository
 type Handler interface {
 	Create(todo *models.Todo) (*models.Todo, error)
+	FindByUserIds(userIds []int) ([]*models.Todo, error)
 }
 
 // NewTodoRepository initialize userRepository

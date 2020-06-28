@@ -6,7 +6,6 @@ package resolver
 import (
 	"context"
 	"errors"
-	"fmt"
 	"strconv"
 
 	"github.com/jorgeAM/basicGraphql/dataloader"
@@ -94,7 +93,7 @@ func (r *todoResolver) User(ctx context.Context, obj *models.Todo) (*models.User
 }
 
 func (r *userResolver) Todos(ctx context.Context, obj *models.User) ([]*models.Todo, error) {
-	panic(fmt.Errorf("not implemented"))
+	return dataloader.GetLoader(ctx).TodoSliceLoader.Load(obj.ID)
 }
 
 // Mutation returns generated.MutationResolver implementation.
